@@ -1,0 +1,27 @@
+trigger:
+  batch: true
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: 'windows-latest'
+
+stages:
+
+  - stage: Lint
+    jobs:
+      - template: pipeline-templates/lint.yml
+
+  - template: pipeline-templates/deploy.yml
+    parameters:
+      environmentType: DEV
+      serviceConnectionName: <dev-service-connection-name>
+      resourceGroup: <dev-resource-group>
+
+  - template: pipeline-templates/deploy.yml
+    parameters:
+      environmentType: PROD
+      serviceConnectionName: <prod-service-connection-name>
+      resourceGroup: <prod-resource-group>
+            

@@ -1,0 +1,47 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "aspName": {
+            "value": "asp-webinar-bicep-prod-01"
+        },
+        "aspSku": {
+            "value": "S1"
+        },
+        "webAppName": {
+            "value": "webapp-webinar-bicep-prod-01"
+        },
+        "managedIdentityName": {
+            "value": "id-webinar-bicep-prod-01"
+        },
+        "sqlServerName": {
+            "value": "sqlServer-webinar-bicep-prod-01"
+        },
+        "databaseName": {
+            "value": "db-webinar-bicep-prod-01"
+        },
+        "databaseTier": {
+            "value": "Premium"
+        },
+        "databaseSkuName": {
+            "value": "P1"
+        },
+        "databaseMaxSizeBytes": {
+            "value": 268435456000
+        },
+        "sqlServerUserAdminLogin": {
+            "value": "<sqlServerUserAdminLogin>"
+        },
+        "sqlServerUserAdminObjectId": {
+            "value": "<sqlServerUserAdminObjectId>"
+        },
+        "longTermBackupProperties": {
+            "value": {
+                "weeklyRetention": "P6M",
+                "monthlyRetention": "P18M",
+                "yearlyRetention": "P5Y",
+                "weekOfYear": 1
+            }
+        }
+    }
+}

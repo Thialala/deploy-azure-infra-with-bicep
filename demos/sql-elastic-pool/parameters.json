@@ -1,0 +1,45 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "serverName": {
+            "value": "sqls-dev-01"
+        },
+        "elasticPoolName": {
+            "value": "sqlp-dev-01"
+        },
+        "elasticPoolSkuName": {
+            "value": "BC_Gen5"
+        },
+        "elasticPoolTier": {
+            "value": "BusinessCritical"
+        },
+        "elasticPoolCapacity": {
+            "value": 12
+        },
+        "databaseList": {
+            "value": {
+                "sqld-testpool001": {
+                    "longTermBackup": {
+                        "monthlyRetention": "P4M",
+                        "weeklyRetention": "P18M",
+                        "yearlyRetention": "P5Y",
+                        "weekOfYear": 1
+                    }
+                },
+                "sqld-testpool002": {
+                    "longTermBackup": {
+                        "monthlyRetention": "P4M",
+                        "weeklyRetention": "P18M"
+                    }
+                },
+                "sqld-testpool003": {
+                    "longTermBackup": {
+                        "monthlyRetention": "P4M",
+                        "weeklyRetention": "P18M"
+                    }
+                }
+            }
+        }
+    }
+}

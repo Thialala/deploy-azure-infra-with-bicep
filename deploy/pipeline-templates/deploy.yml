@@ -1,0 +1,71 @@
+parameters:
+- name: environmentType
+  type: string
+- name: serviceConnectionName
+  type: string
+- name: resourceGroup
+  type: string
+
+stages:
+            
+  - stage: Validate_${{parameters.environmentType}}
+    displayName: Validate Bicep (${{parameters.environmentType}} Env)
+    jobs:
+      - job: ValidateBicepCode
+        displayName: Validate Bicep code
+        steps:
+          - task: AzureCLI@2
+            name: RunPreflightValidation
+            displayName: Run preflight validation
+            inputs:
+              azureSubscription: ${{ parameters.serviceConnectionName}}
+              scriptType: ps
+              scriptLocation: inlineScript
+              inlineScript: | 
+                az deployment group validate `
+                  --name $(Build.BuildNumber) `
+                  --resource-group ${{ parameters.resourceGroup}} `
+                  --template-file deploy/main.bicep `
+                  --parameters deploy/parameters.${{parameters.environmentType}}.json
+
+      - job: PreviewAzureChanges
+        displayName: Preview Azure changes
+        steps:
+          - task: AzureCLI@2
+            name: RunWhatIf
+            displayName: Run what-if
+            inputs:
+              azureSubscription: ${{ parameters.serviceConnectionName}}
+              scriptType: ps
+              scriptLocation: inlineScript
+              inlineScript: |
+                az deployment group what-if `
+                  --name $(Build.BuildNumber) `
+                  --resource-group ${{ parameters.resourceGroup}} `
+                  --template-file deploy/main.bicep `
+                  --parameters deploy/parameters.${{parameters.environmentType}}.json
+
+  - stage: Deploy_${{parameters.environmentType}}
+    displayName: Deploy (${{parameters.environmentType}} Env)
+    jobs:
+      - deployment: 
+        displayName: Deploy
+        environment: ${{ parameters.environmentType }}
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                - task: AzureCLI@2
+                  name: DeployBicepFile
+                  displayName: Deploy Bicep file
+                  inputs:
+                    azureSubscription: ${{ parameters.serviceConnectionName}}
+                    scriptType: ps
+                    scriptLocation: inlineScript
+                    inlineScript: |
+                      az deployment group create `
+                        --name $(Build.BuildNumber) `
+                        --resource-group ${{ parameters.resourceGroup}} `
+                        --template-file deploy/main.bicep `
+                        --parameters deploy/parameters.${{parameters.environmentType}}.json
